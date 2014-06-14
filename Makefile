@@ -1,17 +1,27 @@
-
-
 all: arith
 
-arith: parser.cmo lexer.cmo main.cmo
+test: arith test.txt
+	./arith test.txt
+
+arith: parser.cmo lexer.cmo eval.cmo main.cmo
 	ocamlc -o arith $^
 
-main.cmo: main.ml
+main.cmo: main.ml eval.cmi
+	ocamlc -c $<
+
+eval.cmi: eval.mli
 	ocamlc -c $^
+
+eval.cmo: eval.ml eval.cmi
+	ocamlc -c $<
 
 parser.cmo: parser.ml parser.cmi
 	ocamlc -c $<
 
-parser.cmi: parser.mli
+parser.cmi: parser.mli ast.cmi
+	ocamlc -c $<
+
+ast.cmi: ast.mli
 	ocamlc -c $^
 
 parser.ml parser.mli: parser.mly

@@ -5,10 +5,8 @@ let main () =
   ) else ();
   
   let filename = Sys.argv.(1) in 
-  try
-    let lexbuf = Lexing.from_channel (open_in filename) in
-    Parser.input Lexer.token lexbuf
-  with 
-    | End_of_file -> exit 0
+  let lexbuf = Lexing.from_channel (open_in filename) in
+  let program = Parser.input Lexer.token lexbuf in
+  List.iter (fun f -> print_float f; print_endline "") (Eval.eval program)
 
 let _ = Printexc.print main ()

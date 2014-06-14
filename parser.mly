@@ -14,27 +14,28 @@ open Printf
 %token UMINUS   /* -a    */
 
 %token NEWLINE
+%token EOF
 
 %start input
-%type <unit> input
+%type <Ast.program> input
 
 %%
 
-input:   /* empty */      { }
-       | line input       { }
+input:   EOF              { [] }
+       | line input       { match $1 with None -> $2 | Some e -> e::$2 }
 ;
 
-line:    NEWLINE          { }
-       | exp NEWLINE      { printf "%.4g\n" $1; flush stdout }
+line:    NEWLINE          { None }
+       | exp NEWLINE      { Some $1 }
 ;
 
-exp:     NUM              { $1       }
-       | exp exp PLUS     { $1 +. $2 }
-       | exp exp MINUS    { $1 -. $2 }
-       | exp exp MULTIPLY { $1 *. $2 }
-       | exp exp DIVIDE   { $1 /. $2 }
-       | exp exp CARET    { $1 ** $2 }
-       | exp UMINUS   { -. $1    }
+exp:     NUM              { Ast.Num      ($1    ) }
+       | exp exp PLUS     { Ast.Plus     ($1, $2) }
+       | exp exp MINUS    { Ast.Minus    ($1, $2) }
+       | exp exp MULTIPLY { Ast.Multiply ($1, $2) }
+       | exp exp DIVIDE   { Ast.Divide   ($1, $2) }
+       | exp exp CARET    { Ast.Caret    ($1, $2) }
+       | exp UMINUS       { Ast.Uminus   ($1    ) }
 ;
 
 %% 

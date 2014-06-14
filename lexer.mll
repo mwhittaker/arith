@@ -18,5 +18,4 @@ rule token = parse
   | '^'          { CARET                     }
   | '~'          { UMINUS                    }
   | _            { token lexbuf              }
-  | eof          { raise End_of_file         }
-
+  | eof          { EOF                       }
