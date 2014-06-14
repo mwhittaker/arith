@@ -34,7 +34,7 @@ exp:     NUM              { $1       }
        | exp exp MULTIPLY { $1 *. $2 }
        | exp exp DIVIDE   { $1 /. $2 }
        | exp exp CARET    { $1 ** $2 }
-       | exp exp UMINUS   { -. $1    }
+       | exp UMINUS   { -. $1    }
 ;
 
 %% 
