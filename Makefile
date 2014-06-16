@@ -1,7 +1,10 @@
+MLS     = $(wildcard *.ml)
+MLIS    = $(wildcard *mli)
 CMOS    = eval.cmo parser.cmo lexer.cmo main.cmo 
 CMIS    = ast.cmi eval.cmi parser.cmi
 DEPENDS = lexer.ml parser.mli parser.ml
 OUT     = arith
+DOCDIR  = doc
 
 all: $(OUT)
 
@@ -18,6 +21,11 @@ clean:
 
 purge: clean 
 	rm -f $(OUT)
+	rm -rf $(DOCDIR)
+
+doc: $(CMIS) $(CMOS)
+	mkdir -p $(DOCDIR)
+	ocamldoc -html -colorize-code $(MLIS) -d $(DOCDIR)
 
 %.cmo: %.ml
 	ocamlc -c $<
@@ -31,4 +39,4 @@ purge: clean
 %.mli %.ml: %.mly
 	ocamlyacc $<
 
-.PHONY: all test clean purge
+.PHONY: all test clean purge doc
