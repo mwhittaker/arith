@@ -2,18 +2,19 @@ DEPENDS = $(wildcard *.ml)  \
 		  $(wildcard *.mli) \
 		  $(wildcard *.mll) \
 		  $(wildcard *.mly)
-ODOCL         = doc
-TEST_FILENAME = test.txt
-ARITH         = arith.byte
+ODOCL = doc
+TEST  = test.byte
+ARITH = arith.byte
 
 .PHONY: all arith doc test clean
 
 all: $(ARITH)
 arith: $(ARITH)
 doc: $(ODOCL).docdir/index.html
+test: $(TEST)
 
-test: arith
-	./$(ARITH) $(TEST_FILENAME)
+$(TEST): test.ml
+	ocamlbuild -use-ocamlfind -pkgs oUnit $(TEST)
 
 $(ARITH): $(DEPENDS)
 	ocamlbuild $@
