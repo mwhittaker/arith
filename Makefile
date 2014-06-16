@@ -1,42 +1,25 @@
-MLS     = $(wildcard *.ml)
-MLIS    = $(wildcard *mli)
-CMOS    = eval.cmo parser.cmo lexer.cmo main.cmo 
-CMIS    = ast.cmi eval.cmi parser.cmi
-DEPENDS = lexer.ml parser.mli parser.ml
-OUT     = arith
-DOCDIR  = doc
+DEPENDS = $(wildcard *.ml)  \
+		  $(wildcard *.mli) \
+		  $(wildcard *.mll) \
+		  $(wildcard *.mly)
+ODOCL         = doc
+TEST_FILENAME = test.txt
+ARITH         = arith.byte
 
-all: $(OUT)
+.PHONY: all arith doc test clean
 
-$(OUT): $(DEPENDS) $(CMIS) $(CMOS)
-	ocamlc -o $(OUT) $(CMOS)
+all: $(ARITH)
+arith: $(ARITH)
+doc: $(ODOCL).docdir/index.html
 
-test: $(OUT) test.txt
-	./$(OUT) test.txt
+test: arith
+	./$(ARITH) $(TEST_FILENAME)
 
-clean: 
-	rm -f *.cmo
-	rm -f *.cmi
-	rm -f $(DEPENDS)
+$(ARITH): $(DEPENDS)
+	ocamlbuild $@
 
-purge: clean 
-	rm -f $(OUT)
-	rm -rf $(DOCDIR)
+$(ODOCL).docdir/index.html: $(DEPENDS)
+	ocamlbuild $@
 
-doc: $(CMIS) $(CMOS)
-	mkdir -p $(DOCDIR)
-	ocamldoc -html -colorize-code $(MLIS) -d $(DOCDIR)
-
-%.cmo: %.ml
-	ocamlc -c $<
-
-%.cmi: %.mli
-	ocamlc -c $<
-
-%.ml: %.mll
-	ocamllex $<
-
-%.mli %.ml: %.mly
-	ocamlyacc $<
-
-.PHONY: all test clean purge doc
+clean:
+	ocamlbuild -clean
