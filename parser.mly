@@ -19,6 +19,9 @@ open Printf
 %start input
 %type <Ast.program> input
 
+%start exp
+%type <Ast.expression> exp
+
 %%
 
 input:   EOF              { [] }
