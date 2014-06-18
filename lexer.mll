@@ -17,5 +17,7 @@ rule token = parse
   | '/'          { DIVIDE                    }
   | '^'          { CARET                     }
   | '~'          { UMINUS                    }
+  | '('          { LPAREN                    }
+  | ')'          { RPAREN                    }
   | _            { token lexbuf              }
   | eof          { EOF                       }
