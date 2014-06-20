@@ -6,7 +6,7 @@ let digit = [ '0' - '9' ]
 
 rule token = parse
   | [ ' ' '\t' ] { token lexbuf              }
-  | '\n'         { NEWLINE                   }
+  | '\n'         { token lexbuf              }
   | digit+                        (* 1   *)
   | "." + digit+                  (*  .1 *)
   | digit+ + "." + digit+ as num  (* 1.1 *)
@@ -19,5 +19,6 @@ rule token = parse
   | '~'          { UMINUS                    }
   | '('          { LPAREN                    }
   | ')'          { RPAREN                    }
+  | ';'          { SEMICOLON                 }
   | _            { token lexbuf              }
   | eof          { EOF                       }

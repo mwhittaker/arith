@@ -1,5 +1,7 @@
-let rec repl () =
-  let lexbuf = Lexing.from_string (read_line ()) in
-  let expr = Parser.exp Lexer.token lexbuf in
-  Printf.printf "%f\n" (Eval.eval_expr expr);
-  repl ()
+let repl () =
+  let lexbuf = Lexing.from_channel stdin in
+  let rec repl' () =
+    print_string "λ "; flush stdout;
+    Parser.stdin Lexer.token lexbuf;
+    repl' ()
+  in repl' ()
