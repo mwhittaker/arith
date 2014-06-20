@@ -41,7 +41,9 @@ input:   EOF                  { [] }
 ;
 
 stdin:   EOF            { () }
-       | expr SEMICOLON { Printf.printf "%f\n" (Eval.eval_expr $1); flush stdout }
+       | expr SEMICOLON { Printf.printf "%f\n" (Eval.eval_expr $1);
+                          flush stdout;
+                          Globals.indent := false }
 ;
 
 expr:    NUM                 { Ast.Num      ($1    ) }

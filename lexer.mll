@@ -1,12 +1,21 @@
 {
 open Parser
+open Globals
 }
 
 let digit = [ '0' - '9' ]
 
 rule token = parse
-  | [ ' ' '\t' ] { token lexbuf              }
-  | '\n'         { token lexbuf              }
+  | [ ' ' '\t' ] { token lexbuf }
+  | '\n'         { if !indent then (
+                     if !repl then (
+                       print_string "  "; 
+                       flush stdout
+                     )
+                   ) else
+                     indent := true
+                   ; 
+                   token lexbuf }
   | digit+                        (* 1   *)
   | "." + digit+                  (*  .1 *)
   | digit+ + "." + digit+ as num  (* 1.1 *)
